@@ -9,7 +9,7 @@ async function startServer() {
     await connectDB();
 
     app.listen(port, () => {
-      console.log(`API server running on http://localhost:${port}`);
+      console.log(`API server running`);
     });
   } catch (error) {
     console.error("Failed to start server:", error);
