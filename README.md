@@ -338,14 +338,6 @@ Output directory:
 dist
 ```
 
-## Assignment deliverables
-
-- [ ] **Deployed demo:** `https://YOUR-VERCEL-URL`
-- [ ] **Demo video:** `https://YOUR-VIDEO-URL`
-- [ ] **GitHub repository:** `https://github.com/YOUR-USERNAME/YOUR-REPO`
-- [ ] Upload the 2–5 minute demo video with "anyone with the link can view" access.
-- [ ] Submit the final deployed URL, repository/video details, and required information through the provided Google Form.
-
 ## Reference
 
 The assignment reference page is Snapmint's iPhone 17 Pro EMI product page. The provided assignment specifically asks for product details, multiple variants, EMI plans, and a proceed action while keeping the data dynamic through a database/API.
