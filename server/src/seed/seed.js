@@ -16,9 +16,9 @@ const imageUrls = {
   iphoneBlue:
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbdF2wUTx-uDxvLZZZBNP6zm209J_LJqoiuVzj2i0f-A&s=10",
   samsungBlack:
-    "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=900&q=85",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTclChh_l8ApPqcVqHJ9bwcdj6oMfEbW77S0fxcHBqKWw&s",
   samsungGray:
-    "https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&w=900&q=85",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHZ1-15SXOR0JwaoBJclIY8sgidZjJoHCDgLaAY-Y-Nw&s=10",
   oneplusEmerald:
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqSpKzQOtUxwjBZZfZ1XdRJsUft5TlLwFxGiu3MnSZbg&s=10",
   oneplusBlack:

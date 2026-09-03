@@ -2,6 +2,11 @@
 
 A full-stack EMI product catalog built for the 1Fi SDE1 assignment. Product, variant, pricing, images, and EMI-plan data are stored in MongoDB and served through an Express API; the React frontend consumes that API.
 
+## Live links
+
+- **Deployed demo:** https://1fi-assignment-kappa.vercel.app/
+- **Demo video:** https://drive.google.com/file/d/1X61USte1dsDGiOeKy1diPJOKCFTOKJhj/view?usp=sharing
+
 ## Tech stack
 
 - **Frontend:** React + Vite + Tailwind CSS + React Router
@@ -287,6 +292,7 @@ Unknown variant:
 
 - `/` displays all products from `GET /api/products`.
 - `/products/:slug` displays product details from `GET /api/products/:slug`.
+- The selected variant is stored in the URL as a query parameter (`?variant=<id>`), so refreshing the page or sharing the link preserves the chosen variant instead of resetting to the default.
 - The default variant is selected using the database `isDefault` field.
 - The initial product API response includes EMI plans only for the default variant.
 - Switching to another variant updates the image, MRP, and price immediately, then calls the variant EMI-plan endpoint to load that variant's EMI plans.
