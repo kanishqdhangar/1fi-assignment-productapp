@@ -1,4 +1,4 @@
-# 1Fi SDE1 Assignment — EMI Product Page
+# 1Fi SDE Assignment — EMI Product Page
 
 A full-stack EMI product catalog built for the 1Fi SDE1 assignment. Product, variant, pricing, images, and EMI-plan data are stored in MongoDB and served through an Express API; the React frontend consumes that API.
 
