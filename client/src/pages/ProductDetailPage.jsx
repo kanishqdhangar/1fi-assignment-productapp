@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import LoadingState from "../components/LoadingState";
 import ErrorState from "../components/ErrorState";
 import VariantSelector from "../components/VariantSelector";
@@ -15,6 +15,7 @@ const currency = new Intl.NumberFormat("en-IN", {
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [product, setProduct] = useState(null);
   const [selectedVariantId, setSelectedVariantId] = useState(null);
@@ -49,14 +50,31 @@ export default function ProductDetailPage() {
 
         setProduct(data);
 
-        const defaultVariant =
+        // Prefer the variant from the URL (?variant=<id>) if it's
+        // valid for this product; otherwise fall back to default.
+        const variantFromUrl = searchParams.get("variant");
+        const matchedVariant = data.variants.find(
+          (variant) => variant.id === variantFromUrl
+        );
+
+        const initialVariant =
+          matchedVariant ??
           data.variants.find((variant) => variant.isDefault) ??
           data.variants[0];
 
-        setSelectedVariantId(defaultVariant?.id ?? null);
+        setSelectedVariantId(initialVariant?.id ?? null);
+
+        // Keep the URL in sync (adds ?variant= if it wasn't there,
+        // or corrects it if an invalid id was passed).
+        if (initialVariant) {
+          setSearchParams(
+            { variant: initialVariant.id },
+            { replace: true }
+          );
+        }
 
         // Initial EMI plans come from the product API.
-        setEmiPlans(defaultVariant?.emiPlans ?? []);
+        setEmiPlans(initialVariant?.emiPlans ?? []);
         setEmiStatus("success");
 
         setStatus("success");
@@ -73,6 +91,7 @@ export default function ProductDetailPage() {
     return () => {
       active = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
   // --------------------------------------------------
@@ -164,6 +183,9 @@ export default function ProductDetailPage() {
 
   function handleVariantChange(variantId) {
     setSelectedVariantId(variantId);
+
+    // Persist the choice in the URL so refresh/share keeps it.
+    setSearchParams({ variant: variantId });
 
     // Immediately clear previous EMI selection.
     setSelectedPlanId(null);
