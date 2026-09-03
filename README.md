@@ -194,7 +194,9 @@ Example:
 
 ### `GET /api/products/:slug`
 
-Returns product details with all variants and nested EMI plans.
+Returns product details with all variants.
+
+For the initial product load, EMI plans are returned **only for the default variant** (`isDefault: true`). EMI plans for other variants are fetched separately using the variant EMI-plan endpoint when the user switches variants.
 
 Example:
 
@@ -225,6 +227,16 @@ Example:
           "fundedBy": "Mutual Fund"
         }
       ]
+    },
+    {
+      "id": "generated-orange-variant-id",
+      "label": "256GB / Orange",
+      "storage": "256GB",
+      "color": "Orange",
+      "mrp": 134900,
+      "price": 127400,
+      "imageUrl": "https://images.unsplash.com/...",
+      "isDefault": false
     }
   ]
 }
@@ -235,6 +247,8 @@ The remaining seeded variants/plans follow the same response shape.
 ### `GET /api/products/:slug/variants/:variantId/emi-plans`
 
 Returns only the EMI plans belonging to a specific variant.
+
+The frontend calls this endpoint whenever the user switches from the default variant to another variant, so the EMI plans are loaded dynamically for the selected variant.
 
 Example:
 
@@ -274,7 +288,10 @@ Unknown variant:
 - `/` displays all products from `GET /api/products`.
 - `/products/:slug` displays product details from `GET /api/products/:slug`.
 - The default variant is selected using the database `isDefault` field.
-- Switching variants updates the image, MRP, price, and EMI plans.
+- The initial product API response includes EMI plans only for the default variant.
+- Switching to another variant updates the image, MRP, and price immediately, then calls the variant EMI-plan endpoint to load that variant's EMI plans.
+- A loading state is displayed while the new variant's EMI plans are being fetched.
+- Switching back to the default variant can reuse the EMI plans already loaded from the initial product response.
 - EMI plans use a radio-style single selection.
 - The proceed button remains disabled until an EMI plan is selected.
 - Proceeding shows an inline confirmation message only; there is no payment/order backend.
