@@ -74,28 +74,42 @@ export async function getProducts(req, res, next) {
 
 export async function getProductBySlug(req, res, next) {
   try {
-    const product = await Product.findOne({ slug: req.params.slug }).lean();
+    const product = await Product.findOne({
+      slug: req.params.slug,
+    }).lean();
 
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({
+        error: "Product not found",
+      });
     }
 
-    const variants = await Variant.find({ productId: product._id })
-      .sort({ isDefault: -1, createdAt: 1 })
-      .lean();
-
-    const plans = await EmiPlan.find({
-      variantId: { $in: variants.map((variant) => variant._id) },
+    // Get all variants
+    const variants = await Variant.find({
+      productId: product._id,
     })
-      .sort({ tenureMonths: 1 })
+      .sort({
+        isDefault: -1,
+        createdAt: 1,
+      })
       .lean();
 
-    const plansByVariant = new Map();
+    // Find the default variant
+    const defaultVariant =
+      variants.find((variant) => variant.isDefault) ??
+      variants[0];
 
-    for (const plan of plans) {
-      const key = plan.variantId.toString();
-      if (!plansByVariant.has(key)) plansByVariant.set(key, []);
-      plansByVariant.get(key).push(plan);
+    // Get EMI plans ONLY for the default variant
+    let defaultPlans = [];
+
+    if (defaultVariant) {
+      defaultPlans = await EmiPlan.find({
+        variantId: defaultVariant._id,
+      })
+        .sort({
+          tenureMonths: 1,
+        })
+        .lean();
     }
 
     res.json({
@@ -104,12 +118,25 @@ export async function getProductBySlug(req, res, next) {
       slug: product.slug,
       brand: product.brand,
       description: product.description,
-      variants: variants.map((variant) =>
-        serializeVariant(
-          variant,
-          plansByVariant.get(variant._id.toString()) ?? []
-        )
-      ),
+
+      variants: variants.map((variant) => ({
+        id: variant._id.toString(),
+        label: variant.label,
+        storage: variant.storage ?? null,
+        color: variant.color ?? null,
+        mrp: variant.mrp,
+        price: variant.price,
+        imageUrl: variant.imageUrl,
+        isDefault: variant.isDefault,
+
+        // Only the default variant gets EMI plans
+        ...(defaultVariant &&
+        variant._id.toString() === defaultVariant._id.toString()
+          ? {
+              emiPlans: defaultPlans.map(serializePlan),
+            }
+          : {}),
+      })),
     });
   } catch (error) {
     next(error);

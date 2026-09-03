@@ -8,7 +8,7 @@ async function request(path) {
   try {
     payload = await response.json();
   } catch {
-    // Keep a useful error below when the API doesn't return JSON.
+    // API didn't return JSON
   }
 
   if (!response.ok) {
@@ -24,4 +24,10 @@ export function fetchProducts() {
 
 export function fetchProduct(slug) {
   return request(`/products/${encodeURIComponent(slug)}`);
+}
+
+export function fetchVariantEmiPlans(slug, variantId) {
+  return request(
+    `/products/${encodeURIComponent(slug)}/variants/${variantId}/emi-plans`
+  );
 }
